@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Time Sheets</title>
+</head>
+<body>
+<h1>Employee time sheets</h1><br>
+<ol>
+    <li th:each="timesheet : ${timesheets}"> <p>id: <span th:text="${timesheet.getId()}"></span></p>
+        <ul>
+            <li><p>First name: <span th:text="${timesheet.getEmployee().getFirstName()}"></span></p></li>
+            <li><p>Middle name: <span th:text="${timesheet.getEmployee().getMiddleName()}"></span></p></li>
+            <li><p>Last name: <span th:text="${timesheet.getEmployee().getLastName()}"></span></p></li>
+            <li><p>Date of birth: <span th:text="${timesheet.getEmployee().getDateOfBirth()}"></span></p></li>
+        </ul>
+    </li>
+</ol>
+</body>
+</html>
