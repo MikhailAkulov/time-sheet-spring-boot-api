@@ -1,6 +1,5 @@
 package ru.gb.service;
 
-import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.gb.api.Employee;
@@ -17,11 +16,13 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public List<Employee> showAllEmployees() {
-        List<Employee> employees = employeeRepository.findAll();
-        if (employees.isEmpty()) {
-            throw new NoSuchElementException("Список сотрудников пуст");
-        }
-        return employees;
+        return employeeRepository.findAll();
+
+//        List<Employee> employees = employeeRepository.findAll();
+//        if (employees.isEmpty()) {
+//            throw new NoSuchElementException("Список сотрудников пуст");
+//        }
+//        return employees;
     }
 
     public Employee addNewEmployee(EmployeeRequest request) {
@@ -38,8 +39,8 @@ public class EmployeeService {
     }
 
     public Employee showEmployeeInfo(long id) {
-        return employeeRepository.findById(id).
-                orElseThrow(() -> new NoSuchElementException("Не найден сотрудник с id: \"" + id + "\""));
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Не найден сотрудник с id: \"" + id + "\""));
     }
 
     public Employee deleteEmployee(long id) {

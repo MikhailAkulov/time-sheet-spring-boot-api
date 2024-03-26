@@ -36,21 +36,23 @@ public class EmployeeController {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка сотрудников", content = {
                     @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ExceptionMapper.class)))
-            }),
-            @ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
-                    @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
             })
+//            @ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
+//                    @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
+//            })
     })
     public ResponseEntity<List<Employee>> getAllEmployees() {
         log.info("Получен запрос актуального списка сотрудников");
 
-        final List<Employee> employees;
-        try {
-            employees = employeeService.showAllEmployees();
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(employees);
+        return new ResponseEntity<>(employeeService.showAllEmployees(), HttpStatus.OK);
+
+//        final List<Employee> employees;
+//        try {
+//            employees = employeeService.showAllEmployees();
+//        } catch (NoSuchElementException e) {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
 
     @GetMapping("/{id}")

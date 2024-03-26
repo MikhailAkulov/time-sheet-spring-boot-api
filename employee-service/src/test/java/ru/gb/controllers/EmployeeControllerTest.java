@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import ru.gb.api.Employee;
 import ru.gb.repository.EmployeeRepository;
+import ru.gb.service.EmployeeService;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -27,6 +28,8 @@ class EmployeeControllerTest{
     WebTestClient webTestClient;
     @Autowired
     EmployeeRepository employeeRepository;
+    @Autowired
+    EmployeeService employeeService;
     @Autowired
     JdbcTemplate jdbcTemplate;
 
@@ -45,7 +48,7 @@ class EmployeeControllerTest{
     }
 
     @Test
-    void testGetAllEmployees() {
+    void testGetAllEmployeesSuccess() {
         employeeRepository.saveAll(List.of(
                 new Employee("Иван", "Иванович", "Иванов", LocalDate.of(1968, 7, 24)),
                 new Employee("Петр", "Васильевич", "Пупкин", LocalDate.of(1979, 12, 3)),
@@ -82,6 +85,14 @@ class EmployeeControllerTest{
             Assertions.assertTrue(foundLastName);
             Assertions.assertTrue(dateOfBirth);
         }
+    }
+
+    @Test
+    void testGetAllEmployeesFail() {
+        webTestClient.get()
+                .uri("api/employee/")
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     @Test
@@ -148,6 +159,39 @@ class EmployeeControllerTest{
                 .exchange()
                 .expectStatus().is4xxClientError()
                 .expectBody(IllegalArgumentException.class);
+    }
+
+    @Test
+    void testDeleteEmployeeSuccess() {
+        employeeRepository.saveAll(List.of(
+                new Employee("Иван", "Иванович", "Иванов", LocalDate.of(1968, 7, 24)),
+                new Employee("Петр", "Васильевич", "Пупкин", LocalDate.of(1979, 12, 3))
+        ));
+
+        Long deletedEmployeeId = jdbcTemplate.queryForObject("select max(id) from employees", Long.class);
+
+        webTestClient.delete()
+                .uri("api/employee/" + deletedEmployeeId)
+                .exchange()
+                .expectStatus().isOk();
+
+        Assertions.assertFalse(employeeRepository.existsById(deletedEmployeeId));
+    }
+
+    @Test
+    void testDeleteEmployeeNotFound() {
+        employeeRepository.saveAll(List.of(
+                new Employee("Иван", "Иванович", "Иванов", LocalDate.of(1968, 7, 24)),
+                new Employee("Петр", "Васильевич", "Пупкин", LocalDate.of(1979, 12, 3))
+        ));
+
+        Long nonExistingId = jdbcTemplate.queryForObject("select max(id) from employees", Long.class);
+        nonExistingId++;
+
+        webTestClient.delete()
+                .uri("api/employee/" + nonExistingId)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
 }
