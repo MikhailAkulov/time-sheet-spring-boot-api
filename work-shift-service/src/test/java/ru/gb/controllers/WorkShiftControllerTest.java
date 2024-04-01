@@ -58,7 +58,7 @@ class WorkShiftControllerTest {
         List<WorkShift> expected = workShiftRepository.findAll();
 
         List<JUnitWorkShiftResponse> responseBody = webTestClient.get()
-                .uri("api/wirkshift")
+                .uri("api/workshift")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(new ParameterizedTypeReference<List<JUnitWorkShiftResponse>>() {})
@@ -91,9 +91,73 @@ class WorkShiftControllerTest {
     @Test
     void testGetAllWorkShiftsFail() {
         webTestClient.get()
-                .uri("api/wirkshift")
+                .uri("api/workshift")
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    void testFindWorkShiftByIdSuccess() {
+        WorkShift expected = workShiftRepository.save(new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"));
+
+        JUnitWorkShiftResponse responseBody = webTestClient.get()
+                .uri("api/workshift/" + expected.getId())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(JUnitWorkShiftResponse.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertNotNull(responseBody);
+        Assertions.assertEquals(expected.getId(), responseBody.getId());
+        Assertions.assertEquals(expected.getEmployeeId(), responseBody.getEmployeeId());
+        Assertions.assertEquals(expected.getWorkShiftDate(), responseBody.getWorkShiftDate());
+        Assertions.assertEquals(expected.getWorkHours(), responseBody.getWorkHours());
+        Assertions.assertEquals(expected.getNote(), responseBody.getNote());
+    }
+
+    @Test
+    void testFindWorkShiftByIdNotFound() {
+        WorkShift expected = workShiftRepository.save(new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"));
+
+        long nonExistingId = expected.getId()+1L;
+
+        webTestClient.get()
+                .uri("api/workshift/" + nonExistingId)
                 .exchange()
                 .expectStatus().isNotFound();
     }
 
+    @Test
+    void testSaveWorkShiftSuccess() {
+        JUnitWorkShiftResponse request = new JUnitWorkShiftResponse();
+        request.setEmployeeId(1L);
+        request.setWorkShiftDate(LocalDate.of(2024, 3, 1));
+        request.setWorkHours(8);
+        request.setNote("ordinary");
+
+        JUnitWorkShiftResponse responseBody = webTestClient.post()
+                .uri("api/workshift")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody(JUnitWorkShiftResponse.class)
+                .returnResult().getResponseBody();
+
+        Assertions.assertNotNull(responseBody);
+        Assertions.assertNotNull(responseBody.getId());
+        Assertions.assertEquals(request.getEmployeeId(), responseBody.getEmployeeId());
+        Assertions.assertEquals(request.getWorkShiftDate(), responseBody.getWorkShiftDate());
+        Assertions.assertEquals(request.getWorkHours(), responseBody.getWorkHours());
+        Assertions.assertEquals(request.getNote(), responseBody.getNote());
+    }
+
+    @Test
+    void testSaveWorkShiftFail() {
+        webTestClient.post()
+                .uri("api/workshift")
+                .bodyValue(workShiftRepository.save(new WorkShift()))
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody(NullPointerException.class);
+    }
 }

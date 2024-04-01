@@ -145,10 +145,10 @@ class EmployeeControllerTest{
 
         Assertions.assertNotNull(responseBody);
         Assertions.assertNotNull(responseBody.getId());
-        Assertions.assertEquals(employeeRepository.findEmployeeByFirstName(request.getFirstName()).getFirstName(), responseBody.getFirstName());
-        Assertions.assertEquals(employeeRepository.findEmployeeByMiddleName(request.getMiddleName()).getMiddleName(), responseBody.getMiddleName());
-        Assertions.assertEquals(employeeRepository.findEmployeeByLastName(request.getLastName()).getLastName(), responseBody.getLastName());
-        Assertions.assertEquals(employeeRepository.findEmployeeByDateOfBirth(request.getDateOfBirth()).getDateOfBirth(), responseBody.getDateOfBirth());
+        Assertions.assertEquals(request.getFirstName(), responseBody.getFirstName());
+        Assertions.assertEquals(request.getMiddleName(), responseBody.getMiddleName());
+        Assertions.assertEquals(request.getLastName(), responseBody.getLastName());
+        Assertions.assertEquals(request.getDateOfBirth(), responseBody.getDateOfBirth());
     }
 
     @Test

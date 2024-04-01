@@ -37,23 +37,21 @@ public class WorkShiftController {
                     @ApiResponse(responseCode = "200", description = "Успешное получение списка смен", content = {
                             @Content(mediaType = "application/json",
                                     array = @ArraySchema(schema = @Schema(implementation = ExceptionMapper.class)))
+                    }),
+                    @ApiResponse(responseCode = "404", description = "Список смен пуст", content = {
+                            @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
                     })
-//                    ,@ApiResponse(responseCode = "404", description = "Список смен пуст", content = {
-//                            @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
-//                    })
             })
     public ResponseEntity<List<WorkShift>> getAllWorkShifts() {
         log.info("Получен запрос актуального списка рабочих смен сотрудников");
 
-        return new ResponseEntity<>(workShiftService.showAllWorkShifts(), HttpStatus.OK);
-
-//        final List<WorkShift> workShifts;
-//        try {
-//            workShifts = workShiftService.showAllWorkShifts();
-//        } catch (NoSuchElementException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(workShifts);
+        final List<WorkShift> workShifts;
+        try {
+            workShifts = workShiftService.showAllWorkShifts();
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(workShifts);
     }
 
     @GetMapping("/{id}")
@@ -139,7 +137,7 @@ public class WorkShiftController {
         final WorkShift workShift;
         try {
             workShift = workShiftService.addNewWorkShift(request);
-        } catch (IllegalArgumentException e) {
+        } catch (NullPointerException e) {
             return ResponseEntity.unprocessableEntity().build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(workShift);
