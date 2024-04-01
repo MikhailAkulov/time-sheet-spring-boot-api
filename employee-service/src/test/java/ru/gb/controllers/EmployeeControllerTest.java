@@ -90,7 +90,7 @@ class EmployeeControllerTest{
     @Test
     void testGetAllEmployeesFail() {
         webTestClient.get()
-                .uri("api/employee/")
+                .uri("api/employee")
                 .exchange()
                 .expectStatus().isNotFound();
     }

@@ -15,11 +15,13 @@ public class WorkShiftService {
     private final WorkShiftRepository workShiftRepository;
 
     public List<WorkShift> showAllWorkShifts() {
-        List<WorkShift> workShifts = workShiftRepository.findAll();
-        if (workShifts.isEmpty()) {
-            throw new NoSuchElementException("Список отработанных смен пуст");
-        }
-        return workShifts;
+        return workShiftRepository.findAll();
+
+//        List<WorkShift> workShifts = workShiftRepository.findAll();
+//        if (workShifts.isEmpty()) {
+//            throw new NoSuchElementException("Список отработанных смен пуст");
+//        }
+//        return workShifts;
     }
 
     public List<WorkShift> showAllWorkShiftsByEmployee(long id) {

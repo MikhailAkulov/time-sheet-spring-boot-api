@@ -37,7 +37,7 @@ public class EmployeeController {
                     @Content(mediaType = "application/json",
                             array = @ArraySchema(schema = @Schema(implementation = ExceptionMapper.class)))
             })
-//            @ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
+//            ,@ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
 //                    @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
 //            })
     })
