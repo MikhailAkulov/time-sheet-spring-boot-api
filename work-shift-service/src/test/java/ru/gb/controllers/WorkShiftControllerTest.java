@@ -16,8 +16,10 @@ import ru.gb.repository.WorkShiftRepository;
 import ru.gb.service.WorkShiftService;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @ActiveProfiles("test")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -98,7 +100,9 @@ class WorkShiftControllerTest {
 
     @Test
     void testFindWorkShiftByIdSuccess() {
-        WorkShift expected = workShiftRepository.save(new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"));
+        WorkShift expected = workShiftRepository.save(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary")
+        );
 
         JUnitWorkShiftResponse responseBody = webTestClient.get()
                 .uri("api/workshift/" + expected.getId())
@@ -117,14 +121,45 @@ class WorkShiftControllerTest {
 
     @Test
     void testFindWorkShiftByIdNotFound() {
-        WorkShift expected = workShiftRepository.save(new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"));
+        workShiftRepository.save(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "none")
+        );
 
-        long nonExistingId = expected.getId()+1L;
+        Optional<Long> max = workShiftRepository.findAll()
+                .stream().map(WorkShift::getId)
+                .max(Comparator.naturalOrder());
+
+        long nonExistingId = max.orElse(1L);
+        nonExistingId++;
 
         webTestClient.get()
                 .uri("api/workshift/" + nonExistingId)
                 .exchange()
                 .expectStatus().isNotFound();
+    }
+
+    @Test
+    void testGetAllWorkShiftsByEmployeeIdSuccess() {
+//        List<WorkShift> employeeWorkShifts = workShiftRepository.saveAll(List.of(
+//                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
+//                new WorkShift(1L, LocalDate.of(2024, 3, 2), 6, "none"),
+//                new WorkShift(1L, LocalDate.of(2024, 3, 3), 4, "ordinary")
+//        ));
+//
+////        List<WorkShift> employeeWorkShifts = workShiftRepository.findAll().stream()
+////                .filter(it -> it.getEmployeeId() == id).toList();
+////        List<WorkShift> employeeWorkShifts = workShiftRepository.findWorkShiftByEmployeeId();
+//
+//        List<JUnitWorkShiftResponse> responseBody = webTestClient.get()
+//                .uri("api/workshift/employee/" + employeeWorkShifts.get())
+//                .exchange()
+//                .expectStatus().isOk()
+//                .expectBody(new ParameterizedTypeReference<List<JUnitWorkShiftResponse>>() {})
+//                .returnResult()
+//                .getResponseBody();
+//
+//        Assertions.assertNotNull(responseBody);
+//        Assertions.assertEquals(expected.size(), responseBody.size());
     }
 
     @Test
@@ -160,4 +195,46 @@ class WorkShiftControllerTest {
                 .expectStatus().is4xxClientError()
                 .expectBody(NullPointerException.class);
     }
+
+    @Test
+    void testDeleteWorkShiftSuccess() {
+        workShiftRepository.saveAll(List.of(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
+                new WorkShift(2L, LocalDate.of(2024, 3, 1), 6, "ordinary")
+        ));
+
+        Optional<Long> max = workShiftRepository.findAll()
+                .stream().map(WorkShift::getId)
+                .max(Comparator.naturalOrder());
+
+        long deletedWorkShiftId = max.orElse(1L);
+
+        webTestClient.delete()
+                .uri("api/workshift/" + deletedWorkShiftId)
+                .exchange()
+                .expectStatus().isOk();
+
+        Assertions.assertFalse(workShiftRepository.existsById(deletedWorkShiftId));
+    }
+
+    @Test
+    void testDeleteWorkShiftNotFound() {
+        workShiftRepository.saveAll(List.of(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
+                new WorkShift(2L, LocalDate.of(2024, 3, 1), 6, "ordinary")
+        ));
+
+        Optional<Long> max = workShiftRepository.findAll()
+                .stream().map(WorkShift::getId)
+                .max(Comparator.naturalOrder());
+
+        long nonExistingId = max.orElse(1L);
+        nonExistingId++;
+
+        webTestClient.delete()
+                .uri("api/workshift/" + nonExistingId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
 }
