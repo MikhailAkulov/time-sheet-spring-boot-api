@@ -33,26 +33,24 @@ public class EmployeeController {
     @Operation(summary = "get all employees",
             description = "Загружает список сотрудников, зарегистрированных в системе",
             responses = {
-            @ApiResponse(responseCode = "200", description = "Успешное получение списка сотрудников", content = {
-                    @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = ExceptionMapper.class)))
+                    @ApiResponse(responseCode = "200", description = "Успешное получение списка сотрудников", content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = ExceptionMapper.class)))
+                    }),
+                    @ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
+                            @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
+                    })
             })
-//            ,@ApiResponse(responseCode = "404", description = "Список сотрудников пуст", content = {
-//                    @Content(mediaType = "*/*", schema = @Schema(implementation = String.class))
-//            })
-    })
     public ResponseEntity<List<Employee>> getAllEmployees() {
         log.info("Получен запрос актуального списка сотрудников");
 
-        return new ResponseEntity<>(employeeService.showAllEmployees(), HttpStatus.OK);
-
-//        final List<Employee> employees;
-//        try {
-//            employees = employeeService.showAllEmployees();
-//        } catch (NoSuchElementException e) {
-//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(employees);
+        final List<Employee> employees;
+        try {
+            employees = employeeService.showAllEmployees();
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, e.getMessage());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(employees);
     }
 
     @GetMapping("/{id}")

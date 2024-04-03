@@ -92,7 +92,7 @@ class EmployeeControllerTest{
         webTestClient.get()
                 .uri("api/employee")
                 .exchange()
-                .expectStatus().isNotFound();
+                .expectStatus().isNoContent();
     }
 
     @Test

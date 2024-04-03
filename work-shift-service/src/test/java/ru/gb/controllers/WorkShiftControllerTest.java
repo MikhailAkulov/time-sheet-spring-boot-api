@@ -4,9 +4,11 @@ import lombok.Data;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
@@ -31,12 +33,14 @@ class WorkShiftControllerTest {
     @Autowired
     WorkShiftRepository workShiftRepository;
     @Autowired
-    WorkShiftService workShiftService;
+    private WorkShiftService workShiftService;
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+
     @Data
     static class JUnitWorkShiftResponse {
+
         private Long id;
         private Long employeeId;
         private LocalDate workShiftDate;
@@ -139,30 +143,6 @@ class WorkShiftControllerTest {
     }
 
     @Test
-    void testGetAllWorkShiftsByEmployeeIdSuccess() {
-//        List<WorkShift> employeeWorkShifts = workShiftRepository.saveAll(List.of(
-//                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
-//                new WorkShift(1L, LocalDate.of(2024, 3, 2), 6, "none"),
-//                new WorkShift(1L, LocalDate.of(2024, 3, 3), 4, "ordinary")
-//        ));
-//
-////        List<WorkShift> employeeWorkShifts = workShiftRepository.findAll().stream()
-////                .filter(it -> it.getEmployeeId() == id).toList();
-////        List<WorkShift> employeeWorkShifts = workShiftRepository.findWorkShiftByEmployeeId();
-//
-//        List<JUnitWorkShiftResponse> responseBody = webTestClient.get()
-//                .uri("api/workshift/employee/" + employeeWorkShifts.get())
-//                .exchange()
-//                .expectStatus().isOk()
-//                .expectBody(new ParameterizedTypeReference<List<JUnitWorkShiftResponse>>() {})
-//                .returnResult()
-//                .getResponseBody();
-//
-//        Assertions.assertNotNull(responseBody);
-//        Assertions.assertEquals(expected.size(), responseBody.size());
-    }
-
-    @Test
     void testSaveWorkShiftSuccess() {
         JUnitWorkShiftResponse request = new JUnitWorkShiftResponse();
         request.setEmployeeId(1L);
@@ -233,6 +213,58 @@ class WorkShiftControllerTest {
 
         webTestClient.delete()
                 .uri("api/workshift/" + nonExistingId)
+                .exchange()
+                .expectStatus().isNotFound();
+    }
+
+    @Test
+    void testGetAllWorkShiftsByEmployeeIdSuccess() {
+        workShiftRepository.saveAll(List.of(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
+                new WorkShift(1L, LocalDate.of(2024, 3, 2), 6, "none"),
+                new WorkShift(2L, LocalDate.of(2024, 3, 2), 8, "ordinary"),
+                new WorkShift(2L, LocalDate.of(2024, 3, 3), 4, "none"),
+                new WorkShift(3L, LocalDate.of(2024, 3, 4), 6, "ordinary")
+        ));
+
+        long expectedEmployeeId = 2L;
+        List<WorkShift> expectedEmployeeWorkShifts = workShiftService.showAllWorkShiftsByEmployee(expectedEmployeeId);
+
+        List<JUnitWorkShiftResponse> responseBody = webTestClient.get()
+                .uri("api/workshift/employee/" + expectedEmployeeId)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(new ParameterizedTypeReference<List<JUnitWorkShiftResponse>>() {})
+                .returnResult()
+                .getResponseBody();
+
+        Assertions.assertNotNull(responseBody);
+        Assertions.assertEquals(expectedEmployeeWorkShifts.size(), responseBody.size());
+        for (JUnitWorkShiftResponse workShiftResponse : responseBody) {
+            boolean foundId = expectedEmployeeWorkShifts.stream()
+                    .filter(it -> Objects.equals(it.getId(), workShiftResponse.getId()))
+                    .anyMatch(it -> Objects.equals(it.getEmployeeId(), workShiftResponse.getEmployeeId()));
+            Assertions.assertTrue(foundId);
+        }
+    }
+
+    @Test
+    void testGetAllWorkShiftsByEmployeeIdNotFound() {
+        workShiftRepository.saveAll(List.of(
+                new WorkShift(1L, LocalDate.of(2024, 3, 1), 8, "ordinary"),
+                new WorkShift(2L, LocalDate.of(2024, 3, 2), 8, "ordinary"),
+                new WorkShift(3L, LocalDate.of(2024, 3, 4), 6, "ordinary")
+        ));
+
+        Optional<Long> max = workShiftRepository.findAll()
+                .stream().map(WorkShift::getId)
+                .max(Comparator.naturalOrder());
+
+        long nonExistingId = max.orElse(1L);
+        nonExistingId++;
+
+        webTestClient.get()
+                .uri("api/workshift/employee/" + nonExistingId)
                 .exchange()
                 .expectStatus().isNotFound();
     }

@@ -16,13 +16,11 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     public List<Employee> showAllEmployees() {
-        return employeeRepository.findAll();
-
-//        List<Employee> employees = employeeRepository.findAll();
-//        if (employees.isEmpty()) {
-//            throw new NoSuchElementException("Список сотрудников пуст");
-//        }
-//        return employees;
+        List<Employee> employees = employeeRepository.findAll();
+        if (employees.isEmpty()) {
+            throw new NoSuchElementException("Список сотрудников пуст");
+        }
+        return employees;
     }
 
     public Employee addNewEmployee(EmployeeRequest request) {
