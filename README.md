@@ -110,3 +110,4 @@
    * Файл конфигурации [yaml](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/discovery-service/src/main/resources/application.yml)
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/discovery-service/pom.xml)
 
+### Стек: Spring Boot, Spring Data JPA, Spring Web, Spring WebFlux, Spring Eureka, Spring Configuration Processor, Swagger, REST API, H2, Lombok, Thymeleaf, JavaFaker, Maven.
