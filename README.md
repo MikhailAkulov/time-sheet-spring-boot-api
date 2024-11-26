@@ -55,17 +55,27 @@
 - Микросервисы управления коллекциями сотрудников, рабочих смен, формирования табелей сотрудников
 - Rest-контроллеры
 - Swagger
-  * 
-- Служба обнаружения `service discovery Eureka` см. скриншот
+  * Сотрудники [спецификация OAS](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8180v3ApiDocs.png)
+  ![localhost8180SwaggerShort](image/localhost8180SwaggerShort.png)
+  [развёрнутый скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8180SwaggerFull.png)
+  * Рабочие смены [спецификация OAS](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8280v3ApiDocs.png)
+    ![localhost8280SwaggerShort](image/localhost8280SwaggerShort.png)
+    [развёрнутый скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8280SwaggerFull.png)
+  * Табели [спецификация OAS](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8380v3ApiDocs.png)
+    ![localhost8380SwaggerShort](image/localhost8380SwaggerShort.png)
+    [развёрнутый скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8380SwaggerFull.png)
+- Служба обнаружения `service discovery Eureka` [полный скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/EurekaApps.png)
 - UI с использованием шаблонизатора `Thymeleaf`
 - Тесты контроллеров
+  ![employeeControllerTest](image/employeeControllerTest.png)
+  ![workShiftControllerTest](image/workShiftControllerTest.png)
 
 1. [Модуль сущностей](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/tree/main/model/src/main/java/ru/gb/api)
    * [Сотрудник](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/model/src/main/java/ru/gb/api/Employee.java)
    * [Рабочая смена](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/model/src/main/java/ru/gb/api/WorkShift.java)
    * [Табель](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/model/src/main/java/ru/gb/api/TimeSheet.java)
 2. [Модуль сервиса сотрудников](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/tree/main/employee-service/src/main/java/ru/gb)
-   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/controllers/EmployeeController.java)
+   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/controllers/EmployeeController.java) возвращает JSON [см. скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8180ApiEmployee.png)
    * [Репозиторий](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/repository/EmployeeRepository.java)
    * [Сервис](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/service/EmployeeService.java)
    * [UIController](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/controllers/UiEmployeeController.java)
@@ -73,11 +83,11 @@
    нужен для тестовой генерации 5 сотрудников при запуске (на время запуска тестов код необходимо исключать)
    * [Тесты](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/test/java/ru/gb/controllers/EmployeeControllerTest.java)
    * Файл конфигурации [yaml](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/resources/application.yml)
-   * [Шаблонизатор](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/resources/templates/employees.html)
+   * [Шаблонизатор](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/resources/templates/employees.html), [см. скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8180UiEmployees.png)
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/pom.xml)
    * [Точка входа](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/employee-service/src/main/java/ru/gb/EmployeeApplication.java)
 3. [Модуль рабочих смен](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/tree/main/work-shift-service/src/main/java/ru/gb)
-   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/controllers/WorkShiftController.java)
+   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/controllers/WorkShiftController.java) возвращает JSON [см. скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8280ApiWorkshift.png)
    * [Репозиторий](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/repository/WorkShiftRepository.java)
    * [Сервис](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/service/WorkShiftService.java)
    * Файл [TestWorkShiftDataGenerator](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/TestWorkShiftDataGenerator.java)
@@ -87,11 +97,11 @@
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/pom.xml)
    * [Точка входа](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/WorkShiftApplication.java)
 4. [Модуль табелей учёта рабочих смен](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/tree/main/time-sheet-service/src/main/java/ru/gb)
-   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/controllers/TimeSheetController.java)
+   * [Контроллер](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/controllers/TimeSheetController.java) возвращает JSON [см. скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8380ApiTimesheet.png)
    * [UIController](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/controllers/UiTimeSheetController.java)
    * [EmployeeProvider](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/providers/EmployeeProvider.java)
    * [WorkShiftProvider](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/providers/WorkShiftProvider.java)
-   * [Шаблонизатор](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/resources/templates/timesheets.html)
+   * [Шаблонизатор](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/resources/templates/timesheets.html), [см. скриншот](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/image/localhost8380UiTimesheets.png)
    * Файл конфигурации [yaml](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/resources/application.yml)
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/pom.xml)
    * [Точка входа](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/time-sheet-service/src/main/java/ru/gb/TimeSheetApplication.java)
