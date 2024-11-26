@@ -1,6 +1,6 @@
-# Разработка ИС «Табель» для учета рабочего времени сотрудников строительной организации.
+## Разработка ИС «Табель» для учета рабочего времени сотрудников строительной организации.
 
-## Анализ предметной области и актуальность разработки состоит в следующем: 
+### Анализ предметной области и актуальность разработки состоит в следующем: 
 
 За более чем десятилетний стаж работы в строительных компаниях различной величины, мной был выявлен один общий слабый 
 момент, недооценённый на мой взгляд, и отнимающий ежемесячно у производителей работ (ПР) до одной-двух рабочих смен 
@@ -19,8 +19,9 @@
 - существует риск появления ошибок из-за человеческого фактора;
 - сотрудник сам может запросить у ПР расчёт своих смен «чтобы свериться», при получении выплаты, не соответствующей его собственным расчётам. 
 
+---
 
-## Цель данной работы: 
+### Цель данной работы: 
 
 Разработка информационной системы с единой базой данных (БД) с раздельным доступом к ресурсам. 
 
@@ -37,6 +38,8 @@
 
 3. Сервис табелей. Доступ у авторизованных пользователей отдельные для бухгалтерии и сотрудников.
    - формируются листы отчётности.
+   
+---
 
 ### Порядок запуска: 
 
@@ -45,7 +48,18 @@
 3. Discovery-service
 4. Time-sheet-service
 
+---
+
 ### Реализовано на данный момент:
+- Структура БД, слой репозиториев
+- Микросервисы управления коллекциями сотрудников, рабочих смен, формирования табелей сотрудников
+- Rest-контроллеры
+- Swagger
+  * 
+- Служба обнаружения `service discovery Eureka` см. скриншот
+- UI с использованием шаблонизатора `Thymeleaf`
+- Тесты контроллеров
+
 1. [Модуль сущностей](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/tree/main/model/src/main/java/ru/gb/api)
    * [Сотрудник](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/model/src/main/java/ru/gb/api/Employee.java)
    * [Рабочая смена](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/model/src/main/java/ru/gb/api/WorkShift.java)
@@ -67,7 +81,7 @@
    * [Репозиторий](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/repository/WorkShiftRepository.java)
    * [Сервис](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/service/WorkShiftService.java)
    * Файл [TestWorkShiftDataGenerator](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/java/ru/gb/TestWorkShiftDataGenerator.java)
-     нужен для тестовой генерации 15 рабочих смен каждому из 5 сотрудников при запуске (на время запуска тестов код необходимо исключать)
+     нужен для тестовой генерации 15 рабочих смен работникам при запуске (на время запуска тестов код необходимо исключать)
    * [Тесты](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/test/java/ru/gb/controllers/WorkShiftControllerTest.java)
    * Файл конфигурации [yaml](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/src/main/resources/application.yml)
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/work-shift-service/pom.xml)
@@ -86,6 +100,3 @@
    * Файл конфигурации [yaml](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/discovery-service/src/main/resources/application.yml)
    * [pom](https://github.com/MikhailAkulov/time-sheet-spring-boot-api/blob/main/discovery-service/pom.xml)
 
-##### P.S.: 
-
-Тесты ругаются на discovery, для их проведения необходимо отключать зависимость
